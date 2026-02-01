@@ -17,7 +17,6 @@ body{
 }
 
 .hidden{display:none;}
-
 .page{display:none;}
 .active{display:block;}
 
@@ -69,7 +68,6 @@ canvas{
     margin-top:20px;
 }
 
-/* 🔒 LOCK SCREEN */
 #lock{
     height:100vh;
     display:flex;
@@ -85,18 +83,13 @@ canvas{
 <!-- 🔒 LOCK SCREEN -->
 <div id="lock">
     <h1>Heyyy <span class="name" id="lockName"></span> 😼</h1>
-    <h2>Surprise locked 🔐</h2>
-    <p>Wait till <b>11:59 PM</b> mwuthumani 😏</p>
-    <p>Good things come to those who wait 💖</p>
+    <h2>Surprise unlocked 🔓</h2>
 </div>
 
-<!-- 🎆 FIREWORKS -->
 <canvas id="fireworks"></canvas>
 
-<!-- 🌸 MAIN CONTENT -->
 <div id="content" class="hidden">
 
-<!-- PAGE 1 -->
 <div class="page active" id="page1">
     <img src="cat1.png">
     <h1><span class="name"></span>, do you wanna see a surprise? 😼</h1>
@@ -104,7 +97,6 @@ canvas{
     <h2 onclick="showPage('page2')">NO 🙄</h2>
 </div>
 
-<!-- PAGE 2 -->
 <div class="page" id="page2">
     <img src="cat2.png" class="shake">
     <h1><span class="name"></span>, U DON'T LOVE ME 😾</h1>
@@ -112,7 +104,6 @@ canvas{
     <h2 onclick="showPage('page1')">GO BACK 🔙</h2>
 </div>
 
-<!-- PAGE 3 -->
 <div class="page" id="page3">
     <img src="cat3.png">
     <h1 class="name">SOOO YOUU DO LOVEE MAA <span class="name"></span> 😽💖</h1>
@@ -120,22 +111,17 @@ canvas{
     <h2 onclick="showPage('page4')">CONTINUE 💝</h2>
 </div>
 
-<!-- PAGE 4 -->
 <div class="page" id="page4">
     <img src="cat4.png" onclick="showPage('page5')">
     <h1>HAPPY NEW YEARRR <span class="name"></span> 🎉🎁</h1>
-    <h2 id="countdown"></h2>
     <p>Gift click cheyyu mwuthumani 😏🎁</p>
 </div>
 
-<!-- PAGE 5 -->
 <div class="page" id="page5">
     <img src="cat5.png" onclick="showPage('page6');startFireworks();">
     <h1>SMILEEEE <span class="name"></span> 📸</h1>
-    <p>Camera click cheyyu 😼</p>
 </div>
 
-<!-- PAGE 6 -->
 <div class="page" id="page6">
     <h1>MY FAVORITE <span class="name"></span> ❤️</h1>
     <img src="us.jpg" id="finalPic">
@@ -144,7 +130,6 @@ canvas{
         Ee varshavum… ellaa varshavum…  
         njan ninne thanne choose cheyyum.
     </p>
-    <p style="font-size:14px;">(Photo long press cheythaal 👀)</p>
     <div id="secret">
         <span class="name"></span>,  
         നീയാണ് എന്റെ safe place,  
@@ -157,67 +142,34 @@ canvas{
 </div>
 
 <script>
-/* ✏️ CHANGE NAME HERE */
-const HIS_NAME = "SHUTTUMANIIII";
-
-/* APPLY NAME EVERYWHERE */
+const HIS_NAME="SHUTTUMANIIII";
 document.querySelectorAll(".name").forEach(e=>e.innerText=HIS_NAME);
-document.getElementById("lockName").innerText = HIS_NAME;
+document.getElementById("lockName").innerText=HIS_NAME;
 
-/* ⏰ TIME LOCK */
-const now = new Date();
-const unlock = new Date();
-unlock.setHours(23,59,0,0);
-
-if(now >= unlock){
-    document.getElementById("lock").style.display="none";
-    document.getElementById("content").classList.remove("hidden");
-}
+/* UNLOCK IMMEDIATELY */
+document.getElementById("lock").style.display="none";
+document.getElementById("content").classList.remove("hidden");
 
 /* PAGE NAV */
 const pages=["page1","page2","page3","page4","page5","page6"];
 let current=0;
-
 function showPage(id){
     document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
     document.getElementById(id).classList.add("active");
     current=pages.indexOf(id);
 }
 
-/* COUNTDOWN */
-const newYear=new Date("January 1, 2026 00:00:00").getTime();
-setInterval(()=>{
-    const diff=newYear-new Date().getTime();
-    if(diff<0)return;
-    const d=Math.floor(diff/(1000*60*60*24));
-    const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-    const m=Math.floor((diff%(1000*60*60))/(1000*60));
-    const s=Math.floor((diff%(1000*60))/1000);
-    document.getElementById("countdown").innerText=
-        `⏳ ${d}d ${h}h ${m}m ${s}s to New Year 💖`;
-},1000);
-
 /* LONG PRESS SECRET */
-let timer;
+let pressTimer;
 const pic=document.getElementById("finalPic");
 if(pic){
     pic.addEventListener("mousedown",()=>{
-        timer=setTimeout(()=>document.getElementById("secret").style.display="block",1200);
+        pressTimer=setTimeout(()=>document.getElementById("secret").style.display="block",1200);
     });
-    pic.addEventListener("mouseup",()=>clearTimeout(timer));
+    pic.addEventListener("mouseup",()=>clearTimeout(pressTimer));
 }
 
-/* MOBILE SWIPE */
-let startX=0;
-document.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
-document.addEventListener("touchend",e=>{
-    let endX=e.changedTouches[0].clientX;
-    if(startX-endX>80 && current<pages.length-1){
-        showPage(pages[++current]);
-    }
-});
-
-/* ❤️ FIREWORKS */
+/* FIREWORKS */
 const canvas=document.getElementById("fireworks");
 const ctx=canvas.getContext("2d");
 canvas.width=innerWidth;
